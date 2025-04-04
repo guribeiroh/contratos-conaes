@@ -27,7 +27,8 @@ function App() {
     valor_pagar: '',
     data: dataAtual,
     qtd_parcelas: '1',
-    valor_parcela: ''
+    valor_parcela: '',
+    forma_pagamento: 'PIX'
   });
 
   const [loading, setLoading] = useState(false);
@@ -315,7 +316,8 @@ function App() {
           valor_pagar: '',
           data: '',
           qtd_parcelas: '1',
-          valor_parcela: ''
+          valor_parcela: '',
+          forma_pagamento: 'PIX'
         });
         setCep('');
       }
@@ -326,10 +328,10 @@ function App() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     
-    if (name === 'valor_pagar') {
+    if (name === 'valor_pagar' && 'type' in e.target && e.target.type === 'text') {
       const numericValue = value.replace(/\D/g, '');
       setFormData(prev => ({
         ...prev,
@@ -556,6 +558,22 @@ function App() {
                 className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
                 required
               />
+            </div>
+
+            <div>
+              <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Forma de Pagamento</label>
+              <select
+                id="forma_pagamento"
+                name="forma_pagamento"
+                value={formData.forma_pagamento}
+                onChange={handleChange}
+                className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                required
+              >
+                <option value="PIX">PIX</option>
+                <option value="ASAAS">ASAAS</option>
+                <option value="GURU">GURU</option>
+              </select>
             </div>
           </div>
 
