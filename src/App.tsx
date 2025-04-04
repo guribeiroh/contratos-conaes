@@ -346,7 +346,8 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-2xl p-8">
-        <h1 className="text-3xl font-bold text-green-400 mb-8 text-center">Formulário de Registro</h1>
+        <h1 className="text-3xl font-bold text-green-400 mb-2 text-center">Sistema de Contratos</h1>
+        <h2 className="text-xl font-bold text-white mb-8 text-center">CONAES Brasil</h2>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
