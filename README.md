@@ -26,3 +26,7 @@ Este sistema foi desenvolvido para automatizar a criação de contratos para a C
 - guribeiroh (@guribeiroh)
 - Colaborador: @Lucas2205
 
+## Atualizado em
+
+Última atualização: 08/04/2024
+
