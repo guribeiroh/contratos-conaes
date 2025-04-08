@@ -19,6 +19,7 @@ interface FormData {
   RG: string;
   endereco: string;
   numero: string;
+  complemento: string;
   bairro: string;
   cidade: string;
   estado: string;
@@ -48,6 +49,7 @@ function App() {
     RG: '',
     endereco: '',
     numero: '',
+    complemento: '',
     bairro: '',
     cidade: '',
     estado: '',
@@ -281,7 +283,17 @@ function App() {
       const diaNascimento = birthDateParts[2];
       const dataNascimentoFormatada = `${diaNascimento}-${mesNascimento}-${anoNascimento}`;
 
-      const enderecoCompleto = `${formData.endereco}, ${formData.numero}, ${formData.bairro}, ${formData.cidade}-${formData.estado}`;
+      const enderecoCompleto = `${formData.endereco}, ${formData.numero}${formData.complemento ? `, ${formData.complemento}` : ''}, ${formData.bairro}, ${formData.cidade}-${formData.estado}`;
+      
+      console.log('Endereço Completo:', enderecoCompleto);
+      console.log('Dados do endereço:', {
+        rua: formData.endereco,
+        numero: formData.numero,
+        complemento: formData.complemento,
+        bairro: formData.bairro,
+        cidade: formData.cidade,
+        estado: formData.estado
+      });
 
       // Formatação do valor para o padrão solicitado
       const valorNumerico = parseInt(formData.valor_pagar) / 100;
@@ -388,7 +400,7 @@ function App() {
       return !!formData.NOME && !!formData.email && !!formData.telefone && !!formData.data_nascimento && 
              !!formData.CPF && !!formData.RG && !dateError;
     } else if (etapaAtual === 2) {
-      // Validar endereço
+      // Validar endereço (complemento não é obrigatório)
       return !!formData.endereco && !!formData.numero && !!formData.bairro && 
              !!formData.cidade && !!formData.estado;
     } else if (etapaAtual === 3) {
@@ -641,6 +653,18 @@ function App() {
               maxLength={2}
             />
           </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-green-400 mb-2" htmlFor="complemento">Complemento</label>
+            <textarea
+              id="complemento"
+              name="complemento"
+              value={formData.complemento}
+              onChange={handleChange}
+              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500 min-h-[100px] resize-y"
+              placeholder="Apartamento, bloco, ponto de referência, etc..."
+            />
+          </div>
         </div>
       </>
     );
@@ -850,6 +874,7 @@ function App() {
       RG: '',
       endereco: '',
       numero: '',
+      complemento: '',
       bairro: '',
       cidade: '',
       estado: '',
