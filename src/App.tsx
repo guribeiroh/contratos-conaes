@@ -403,29 +403,59 @@ function App() {
   // Renderiza o indicador de progresso
   const renderIndicadorProgresso = () => {
     return (
-      <div className="flex items-center justify-between w-full mb-8">
-        {Array.from({ length: totalEtapas }).map((_, index) => (
-          <div key={index} className="flex items-center">
-            <div 
-              className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                index + 1 === etapaAtual 
-                  ? 'bg-green-500 text-white' 
-                  : index + 1 < etapaAtual 
-                    ? 'bg-green-300 text-gray-800' 
-                    : 'bg-gray-600 text-white'
-              }`}
-            >
-              {index + 1}
-            </div>
-            {index < totalEtapas - 1 && (
-              <div 
-                className={`h-1 w-24 mx-2 ${
-                  index + 1 < etapaAtual ? 'bg-green-300' : 'bg-gray-600'
-                }`}
-              />
-            )}
-          </div>
-        ))}
+      <div className="w-full mb-10 relative">
+        {/* Barra de progresso de fundo */}
+        <div className="absolute top-1/2 left-0 right-0 h-1 bg-gray-700 -translate-y-1/2"></div>
+        
+        {/* Barra de progresso preenchida */}
+        <div 
+          className="absolute top-1/2 left-0 h-1 bg-green-500 -translate-y-1/2 transition-all duration-300"
+          style={{ width: `${((etapaAtual - 1) / (totalEtapas - 1)) * 100}%` }}
+        ></div>
+        
+        {/* Círculos de etapa */}
+        <div className="flex justify-between relative">
+          {Array.from({ length: totalEtapas }).map((_, index) => {
+            const isCompleted = index + 1 < etapaAtual;
+            const isCurrent = index + 1 === etapaAtual;
+            const isPending = index + 1 > etapaAtual;
+            
+            return (
+              <div key={index} className="flex flex-col items-center relative z-10">
+                {/* Círculo da etapa */}
+                <div 
+                  className={`
+                    flex items-center justify-center w-12 h-12 rounded-full border-2 
+                    transition-all duration-300 text-sm font-bold shadow-lg
+                    ${isCompleted ? 'bg-green-500 border-green-500 text-white' : ''}
+                    ${isCurrent ? 'bg-green-500 border-green-500 text-white scale-110' : ''}
+                    ${isPending ? 'bg-gray-800 border-gray-600 text-gray-400' : ''}
+                  `}
+                >
+                  {isCompleted ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    index + 1
+                  )}
+                </div>
+                
+                {/* Rótulo da etapa */}
+                <span 
+                  className={`
+                    mt-2 text-xs font-medium 
+                    ${isCompleted || isCurrent ? 'text-green-400' : 'text-gray-500'}
+                  `}
+                >
+                  {index === 0 && 'Pessoal'}
+                  {index === 1 && 'Endereço'}
+                  {index === 2 && 'Financeiro'}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   };
