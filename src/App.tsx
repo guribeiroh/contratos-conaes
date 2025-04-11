@@ -258,6 +258,25 @@ function App() {
     }
   };
 
+  // Função para converter número do mês em nome por extenso
+  const getMesPorExtenso = (mes: string): string => {
+    const meses = {
+      '01': 'Janeiro',
+      '02': 'Fevereiro',
+      '03': 'Março',
+      '04': 'Abril',
+      '05': 'Maio',
+      '06': 'Junho',
+      '07': 'Julho',
+      '08': 'Agosto',
+      '09': 'Setembro',
+      '10': 'Outubro',
+      '11': 'Novembro',
+      '12': 'Dezembro'
+    };
+    return meses[mes] || '';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -275,6 +294,7 @@ function App() {
       const mes = dataParts[1];
       const dia = dataParts[2];
       const dataFormatada = `${dia}-${mes}-${ano}`;
+      const mesPorExtenso = getMesPorExtenso(mes);
       
       // Formato DD-MM-AAAA para a data de nascimento - ajustado para o fuso horário de Brasília
       const birthDateParts = formData.data_nascimento.split('-');
@@ -282,6 +302,7 @@ function App() {
       const mesNascimento = birthDateParts[1];
       const diaNascimento = birthDateParts[2];
       const dataNascimentoFormatada = `${diaNascimento}-${mesNascimento}-${anoNascimento}`;
+      const mesNascimentoPorExtenso = getMesPorExtenso(mesNascimento);
 
       const enderecoCompleto = `${formData.endereco}, ${formData.numero}${formData.complemento ? `, ${formData.complemento}` : ''}, ${formData.bairro}, ${formData.cidade}-${formData.estado}`;
       
@@ -335,6 +356,8 @@ function App() {
         parcelas: formData.qtd_parcelas,
         dia,
         mes,
+        mes_extenso: mesPorExtenso,
+        mes_nascimento_extenso: mesNascimentoPorExtenso,
         ano,
         forma_pagamento: formData.forma_pagamento,
         produto: formData.produto,
@@ -342,7 +365,7 @@ function App() {
         forma_cobranca: formData.forma_cobranca
       };
 
-      console.log('Enviando contrato com forma de cobrança:', formData.forma_cobranca);
+      console.log('Payload completo:', payload);
       
       const response = await fetch('https://hook.us1.make.com/vq7mfoc3r2g8owldmd967t64zj1slfdt', {
         method: 'POST',
