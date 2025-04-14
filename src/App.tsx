@@ -357,7 +357,7 @@ function App() {
         maximumFractionDigits: 2
       }).format(valorParcelaNumerico);
       
-      // Valor real no formato solicitado
+      // Formatação do valor da parcela para texto simples
       const valorParcelaSimples = new Intl.NumberFormat('pt-BR', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
@@ -388,6 +388,34 @@ function App() {
         valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}).`;
       }
 
+      // Criação da descrição padronizada para contratos
+      let descricaoContratoPagamento = '';
+      
+      // Formatar o valor em extenso com primeira letra maiúscula
+      const valorPorExtensoCapitalizado = valorPorExtenso.charAt(0).toUpperCase() + valorPorExtenso.slice(1);
+      
+      if (formData.forma_cobranca === 'À Vista') {
+        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) pago à vista via ${formData.forma_pagamento}.`;
+      } else if (formData.forma_cobranca === 'Entrada + Parcelamento') {
+        let descricaoParcelas = '';
+        if (formData.forma_pagamento === 'Boleto') {
+          descricaoParcelas = `via ${formData.forma_pagamento} com vencimento no dia ${formData.dia_vencimento} de cada mês`;
+        } else {
+          descricaoParcelas = `via ${formData.forma_pagamento}`;
+        }
+        
+        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas de ${valorParcelaSimples} ${descricaoParcelas}.`;
+      } else if (formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') {
+        let descricaoParcelas = '';
+        if (formData.forma_pagamento === 'Boleto') {
+          descricaoParcelas = `via ${formData.forma_pagamento} com vencimento no dia ${formData.dia_vencimento} de cada mês`;
+        } else {
+          descricaoParcelas = `via ${formData.forma_pagamento}`;
+        }
+        
+        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas de ${valorParcelaSimples} ${descricaoParcelas}.`;
+      }
+
       const payload = {
         ...formData,
         data: dataFormatada,
@@ -406,7 +434,9 @@ function App() {
         forma_pagamento: formData.forma_pagamento,
         produto: formData.produto,
         vendedor: formData.vendedor,
-        forma_cobranca: formData.forma_cobranca
+        forma_cobranca: formData.forma_cobranca,
+        // Nova saída padronizada para contratos
+        descricao_contrato: descricaoContratoPagamento
       };
 
       console.log('Payload completo:', payload);
