@@ -773,42 +773,79 @@ function App() {
     return (
       <>
         <h2 className="text-xl font-semibold text-green-400 mb-6">Informações Financeiras</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-green-400 mb-2" htmlFor="vendedor">Vendedor</label>
-            <select
-              id="vendedor"
-              name="vendedor"
-              value={formData.vendedor}
-              onChange={handleChange}
-              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-              required
-            >
-              <option value="Milena">Milena</option>
-              <option value="Alana">Alana</option>
-              <option value="Conaes">Conaes</option>
-            </select>
-          </div>
-          
-          <div>
-            <label className="block text-green-400 mb-2" htmlFor="produto">Produto</label>
-            <select
-              id="produto"
-              name="produto"
-              value={formData.produto}
-              onChange={handleChange}
-              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-              required
-            >
-              <option value="Pós - Ccann">Pós - Ccann</option>
-              <option value="Ccann">Ccann</option>
-              <option value="Ped na Prática">Ped na Prática</option>
-              <option value="Congresso">Congresso</option>
-            </select>
-          </div>
+        
+        {/* Informações Básicas */}
+        <div className="mb-6">
+          <h3 className="text-md font-medium text-green-400 mb-4 border-b border-gray-700 pb-2">Informações Gerais</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-green-400 mb-2" htmlFor="vendedor">Vendedor</label>
+              <select
+                id="vendedor"
+                name="vendedor"
+                value={formData.vendedor}
+                onChange={handleChange}
+                className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                required
+              >
+                <option value="Milena">Milena</option>
+                <option value="Alana">Alana</option>
+                <option value="Conaes">Conaes</option>
+              </select>
+            </div>
+            
+            <div>
+              <label className="block text-green-400 mb-2" htmlFor="produto">Produto</label>
+              <select
+                id="produto"
+                name="produto"
+                value={formData.produto}
+                onChange={handleChange}
+                className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                required
+              >
+                <option value="Pós - Ccann">Pós - Ccann</option>
+                <option value="Ccann">Ccann</option>
+                <option value="Ped na Prática">Ped na Prática</option>
+                <option value="Congresso">Congresso</option>
+              </select>
+            </div>
 
-          <div>
-            <label className="block text-green-400 mb-2" htmlFor="forma_cobranca">Forma de Cobrança</label>
+            <div>
+              <label className="block text-green-400 mb-2" htmlFor="data">Data</label>
+              <input
+                type="date"
+                id="data"
+                name="data"
+                value={formData.data}
+                onChange={handleChange}
+                className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block text-green-400 mb-2" htmlFor="valor_pagar">Valor Total</label>
+              <input
+                type="text"
+                id="valor_pagar"
+                name="valor_pagar"
+                value={formData.valor_pagar ? formatCurrency(formData.valor_pagar) : ''}
+                onChange={handleChange}
+                className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                placeholder="R$ 0,00"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Forma de Pagamento */}
+        <div className="mb-6">
+          <h3 className="text-md font-medium text-green-400 mb-4 border-b border-gray-700 pb-2">Forma de Pagamento</h3>
+          
+          <div className="mb-6">
+            <label className="block text-green-400 mb-2" htmlFor="forma_cobranca">Tipo de Pagamento</label>
             <select
               id="forma_cobranca"
               name="forma_cobranca"
@@ -824,76 +861,11 @@ function App() {
             </select>
           </div>
 
-          <div>
-            <label className="block text-green-400 mb-2" htmlFor="valor_pagar">Valor Total</label>
-            <input
-              type="text"
-              id="valor_pagar"
-              name="valor_pagar"
-              value={formData.valor_pagar ? formatCurrency(formData.valor_pagar) : ''}
-              onChange={handleChange}
-              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-              placeholder="R$ 0,00"
-              required
-            />
-          </div>
-
-          {formData.forma_cobranca === 'Entrada + Parcelamento' && (
-            <>
+          {/* Opções condicionais com base na forma de cobrança selecionada */}
+          {formData.forma_cobranca === 'À Vista' && (
+            <div className="grid grid-cols-1 gap-6 bg-gray-750 p-4 rounded-lg border border-gray-700">
               <div>
-                <label className="block text-green-400 mb-2" htmlFor="valor_entrada">Valor de Entrada</label>
-                <input
-                  type="text"
-                  id="valor_entrada"
-                  name="valor_entrada"
-                  value={formData.valor_entrada ? formatCurrency(formData.valor_entrada) : ''}
-                  onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                  placeholder="R$ 0,00"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-green-400 mb-2" htmlFor="forma_pagamento_entrada">Forma de Pagamento da Entrada</label>
-                <select
-                  id="forma_pagamento_entrada"
-                  name="forma_pagamento_entrada"
-                  value={formData.forma_pagamento_entrada}
-                  onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                  required
-                >
-                  <option value="Pix">Pix</option>
-                  <option value="Cartão de crédito">Cartão de crédito</option>
-                  <option value="Boleto">Boleto</option>
-                </select>
-              </div>
-            </>
-          )}
-
-          {(formData.forma_cobranca === 'Entrada + Parcelamento' || formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') && (
-            <>
-              <div>
-                <label className="block text-green-400 mb-2" htmlFor="qtd_parcelas">Quantidade de Parcelas</label>
-                <select
-                  id="qtd_parcelas"
-                  name="qtd_parcelas"
-                  value={formData.qtd_parcelas}
-                  onChange={handleChange}
-                  className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                  required
-                >
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
-                    <option key={num} value={num}>
-                      {num} {num === 1 ? 'parcela' : 'parcelas'}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Forma de Pagamento</label>
+                <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Meio de Pagamento</label>
                 <select
                   id="forma_pagamento"
                   name="forma_pagamento"
@@ -908,19 +880,6 @@ function App() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-green-400 mb-2" htmlFor="valor_parcela">Valor da Parcela</label>
-                <input
-                  type="text"
-                  id="valor_parcela"
-                  name="valor_parcela"
-                  value={formData.valor_parcela ? formatCurrency(formData.valor_parcela) : ''}
-                  readOnly
-                  className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                  placeholder="R$ 0,00"
-                />
-              </div>
-              
               {formData.forma_pagamento === 'Boleto' && (
                 <div>
                   <label className="block text-green-400 mb-2" htmlFor="dia_vencimento">Dia de Vencimento</label>
@@ -940,39 +899,189 @@ function App() {
                   </select>
                 </div>
               )}
-            </>
-          )}
-
-          {formData.forma_cobranca === 'À Vista' && (
-            <div>
-              <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Forma de Pagamento</label>
-              <select
-                id="forma_pagamento"
-                name="forma_pagamento"
-                value={formData.forma_pagamento}
-                onChange={handleChange}
-                className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                required
-              >
-                <option value="Pix">Pix</option>
-                <option value="Cartão de crédito">Cartão de crédito</option>
-                <option value="Boleto">Boleto</option>
-              </select>
             </div>
           )}
 
-          <div>
-            <label className="block text-green-400 mb-2" htmlFor="data">Data</label>
-            <input
-              type="date"
-              id="data"
-              name="data"
-              value={formData.data}
-              onChange={handleChange}
-              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-              required
-            />
-          </div>
+          {formData.forma_cobranca === 'Entrada + Parcelamento' && (
+            <div className="grid grid-cols-1 gap-6 bg-gray-750 p-4 rounded-lg border border-gray-700">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="valor_entrada">Valor de Entrada</label>
+                  <input
+                    type="text"
+                    id="valor_entrada"
+                    name="valor_entrada"
+                    value={formData.valor_entrada ? formatCurrency(formData.valor_entrada) : ''}
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    placeholder="R$ 0,00"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="forma_pagamento_entrada">Meio de Pagamento da Entrada</label>
+                  <select
+                    id="forma_pagamento_entrada"
+                    name="forma_pagamento_entrada"
+                    value={formData.forma_pagamento_entrada}
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    required
+                  >
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão de crédito">Cartão de crédito</option>
+                    <option value="Boleto">Boleto</option>
+                  </select>
+                </div>
+              </div>
+
+              <hr className="border-gray-700 my-2" />
+              <p className="text-sm text-gray-400 mb-2">Configuração das Parcelas</p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="qtd_parcelas">Quantidade de Parcelas</label>
+                  <select
+                    id="qtd_parcelas"
+                    name="qtd_parcelas"
+                    value={formData.qtd_parcelas}
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    required
+                  >
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
+                      <option key={num} value={num}>
+                        {num} {num === 1 ? 'parcela' : 'parcelas'}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Meio de Pagamento das Parcelas</label>
+                  <select
+                    id="forma_pagamento"
+                    name="forma_pagamento"
+                    value={formData.forma_pagamento}
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    required
+                  >
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão de crédito">Cartão de crédito</option>
+                    <option value="Boleto">Boleto</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="valor_parcela">Valor da Parcela</label>
+                  <input
+                    type="text"
+                    id="valor_parcela"
+                    name="valor_parcela"
+                    value={formData.valor_parcela ? formatCurrency(formData.valor_parcela) : ''}
+                    readOnly
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    placeholder="R$ 0,00"
+                  />
+                </div>
+                
+                {formData.forma_pagamento === 'Boleto' && (
+                  <div>
+                    <label className="block text-green-400 mb-2" htmlFor="dia_vencimento">Dia de Vencimento</label>
+                    <select
+                      id="dia_vencimento"
+                      name="dia_vencimento"
+                      value={formData.dia_vencimento}
+                      onChange={handleChange}
+                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                      required
+                    >
+                      {Array.from({ length: 28 }, (_, i) => i + 1).map(dia => (
+                        <option key={dia} value={dia}>
+                          {dia}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {(formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') && (
+            <div className="grid grid-cols-1 gap-6 bg-gray-750 p-4 rounded-lg border border-gray-700">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="qtd_parcelas">Quantidade de Parcelas</label>
+                  <select
+                    id="qtd_parcelas"
+                    name="qtd_parcelas"
+                    value={formData.qtd_parcelas}
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    required
+                  >
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
+                      <option key={num} value={num}>
+                        {num} {num === 1 ? 'parcela' : 'parcelas'}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Meio de Pagamento</label>
+                  <select
+                    id="forma_pagamento"
+                    name="forma_pagamento"
+                    value={formData.forma_pagamento}
+                    onChange={handleChange}
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    required
+                  >
+                    <option value="Pix">Pix</option>
+                    <option value="Cartão de crédito">Cartão de crédito</option>
+                    <option value="Boleto">Boleto</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-green-400 mb-2" htmlFor="valor_parcela">Valor da Parcela</label>
+                  <input
+                    type="text"
+                    id="valor_parcela"
+                    name="valor_parcela"
+                    value={formData.valor_parcela ? formatCurrency(formData.valor_parcela) : ''}
+                    readOnly
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                    placeholder="R$ 0,00"
+                  />
+                </div>
+                
+                {formData.forma_pagamento === 'Boleto' && (
+                  <div>
+                    <label className="block text-green-400 mb-2" htmlFor="dia_vencimento">Dia de Vencimento</label>
+                    <select
+                      id="dia_vencimento"
+                      name="dia_vencimento"
+                      value={formData.dia_vencimento}
+                      onChange={handleChange}
+                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                      required
+                    >
+                      {Array.from({ length: 28 }, (_, i) => i + 1).map(dia => (
+                        <option key={dia} value={dia}>
+                          {dia}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </>
     );
