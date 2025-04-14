@@ -821,7 +821,6 @@ function App() {
               <option value="Entrada + Parcelamento">Entrada + Parcelamento</option>
               <option value="Parcelamento">Parcelamento</option>
               <option value="Recorrência">Recorrência</option>
-              <option value="C. Crédito">C. Crédito</option>
             </select>
           </div>
 
