@@ -375,7 +375,7 @@ function App() {
         } else {
           descricaoPagamento = `através de ${formData.forma_pagamento}`;
         }
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e demais parcelas em ${formData.qtd_parcelas} x ${valorParcelaSimples} ${descricaoPagamento}.`;
+        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e demais parcelas em ${formData.qtd_parcelas} x R$ ${valorParcelaSimples} ${descricaoPagamento}.`;
       } else if (formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') {
         let descricaoPagamento = '';
         if (formData.forma_pagamento === 'Boleto') {
@@ -383,7 +383,7 @@ function App() {
         } else {
           descricaoPagamento = `através de ${formData.forma_pagamento}`;
         }
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de ${valorParcelaSimples} ${descricaoPagamento}.`;
+        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de R$ ${valorParcelaSimples} ${descricaoPagamento}.`;
       } else {
         valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}).`;
       }
@@ -404,7 +404,7 @@ function App() {
           descricaoParcelas = `via ${formData.forma_pagamento}`;
         }
         
-        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas de ${valorParcelaSimples} ${descricaoParcelas}.`;
+        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
       } else if (formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') {
         let descricaoParcelas = '';
         if (formData.forma_pagamento === 'Boleto') {
@@ -413,7 +413,7 @@ function App() {
           descricaoParcelas = `via ${formData.forma_pagamento}`;
         }
         
-        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas de ${valorParcelaSimples} ${descricaoParcelas}.`;
+        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
       }
 
       const payload = {
