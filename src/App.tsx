@@ -24,6 +24,8 @@ interface FormData {
   cidade: string;
   estado: string;
   valor_pagar: string;
+  valor_entrada: string;
+  forma_pagamento_entrada: string;
   data: string;
   qtd_parcelas: string;
   valor_parcela: string;
@@ -31,6 +33,7 @@ interface FormData {
   produto: string;
   vendedor: string;
   forma_cobranca: string;
+  dia_vencimento: string;
 }
 
 function App() {
@@ -54,13 +57,16 @@ function App() {
     cidade: '',
     estado: '',
     valor_pagar: '',
+    valor_entrada: '0',
+    forma_pagamento_entrada: 'PIX',
     data: dataAtual,
     qtd_parcelas: '1',
     valor_parcela: '',
     forma_pagamento: 'PIX',
     produto: 'CCANN',
     vendedor: 'MILENA',
-    forma_cobranca: 'À VISTA'
+    forma_cobranca: 'À VISTA',
+    dia_vencimento: '20'
   });
 
   const [loading, setLoading] = useState(false);
@@ -194,21 +200,23 @@ function App() {
     }).format(floatValue);
   };
 
-  // Atualiza o valor da parcela quando o valor total ou número de parcelas muda
+  // Atualiza o valor da parcela quando o valor total ou número de parcelas ou valor de entrada muda
   useEffect(() => {
     if (formData.valor_pagar && formData.qtd_parcelas) {
       const valorTotal = parseInt(formData.valor_pagar) / 100;
+      const valorEntrada = parseInt(formData.valor_entrada || '0') / 100;
+      const valorAParcelar = valorTotal - valorEntrada;
       const parcelas = parseInt(formData.qtd_parcelas);
       
-      if (parcelas > 0) {
-        const valorParcela = Math.round((valorTotal / parcelas) * 100).toString();
+      if (parcelas > 0 && valorAParcelar > 0) {
+        const valorParcela = Math.round((valorAParcelar / parcelas) * 100).toString();
         setFormData(prev => ({
           ...prev,
           valor_parcela: valorParcela
         }));
       }
     }
-  }, [formData.valor_pagar, formData.qtd_parcelas]);
+  }, [formData.valor_pagar, formData.qtd_parcelas, formData.valor_entrada]);
 
   const checkAge = (birthDate: string) => {
     // Usar o fuso horário local (Brasília) para ambas as datas
@@ -327,6 +335,13 @@ function App() {
       // Valor formatado como "R$ X.XXX,XX (valor por extenso)"
       const valorCompleto = `R$ ${valorFormatado} (${valorPorExtenso})`;
       
+      // Formatação do valor de entrada
+      const valorEntradaNumerico = parseInt(formData.valor_entrada || '0') / 100;
+      const valorEntradaFormatado = new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }).format(valorEntradaNumerico);
+      
       // Valor da parcela formatado
       const valorParcelaNumerico = parseInt(formData.valor_parcela) / 100;
       const valorParcelaFormatado = new Intl.NumberFormat('pt-BR', {
@@ -342,8 +357,13 @@ function App() {
         maximumFractionDigits: 2
       }).format(valorParcelaNumerico);
       
-      // Simplificar a string de valor real
-      const valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de ${valorParcelaSimples}`;
+      // Descrição completa do pagamento
+      let valorReal = '';
+      if (valorEntradaNumerico > 0) {
+        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e demais parcelas em ${formData.qtd_parcelas} x ${valorParcelaSimples} através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês.`;
+      } else {
+        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de ${valorParcelaSimples} através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês.`;
+      }
 
       const payload = {
         ...formData,
@@ -353,6 +373,7 @@ function App() {
         valor_formatado: valorCompleto,
         valor_real: valorReal,
         valor_parcela_formatado: valorParcelaFormatado,
+        valor_entrada_formatado: `R$ ${valorEntradaFormatado}`,
         parcelas: formData.qtd_parcelas,
         dia,
         mes,
@@ -385,10 +406,10 @@ function App() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
-    if (name === 'valor_pagar') {
+    if (name === 'valor_pagar' || name === 'valor_entrada') {
       const numericValue = value.replace(/\D/g, '');
       setFormData(prev => ({
         ...prev,
@@ -427,10 +448,10 @@ function App() {
       return !!formData.endereco && !!formData.numero && !!formData.bairro && 
              !!formData.cidade && !!formData.estado;
     } else if (etapaAtual === 3) {
-      // Validar informações financeiras
+      // Validar informações financeiras (valor de entrada não é obrigatório)
       return !!formData.valor_pagar && !!formData.qtd_parcelas && 
              !!formData.data && !!formData.forma_pagamento && !!formData.produto && 
-             !!formData.vendedor && !!formData.forma_cobranca;
+             !!formData.vendedor && !!formData.forma_cobranca && !!formData.dia_vencimento;
     }
     return true;
   };
@@ -763,6 +784,34 @@ function App() {
           </div>
 
           <div>
+            <label className="block text-green-400 mb-2" htmlFor="valor_entrada">Valor de Entrada</label>
+            <input
+              type="text"
+              id="valor_entrada"
+              name="valor_entrada"
+              value={formData.valor_entrada ? formatCurrency(formData.valor_entrada) : ''}
+              onChange={handleChange}
+              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+              placeholder="R$ 0,00"
+            />
+          </div>
+
+          <div>
+            <label className="block text-green-400 mb-2" htmlFor="forma_pagamento_entrada">Forma de Pagamento da Entrada</label>
+            <select
+              id="forma_pagamento_entrada"
+              name="forma_pagamento_entrada"
+              value={formData.forma_pagamento_entrada}
+              onChange={handleChange}
+              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+            >
+              <option value="PIX">PIX</option>
+              <option value="Transferência">Transferência</option>
+              <option value="Cartão">Cartão</option>
+            </select>
+          </div>
+
+          <div>
             <label className="block text-green-400 mb-2" htmlFor="qtd_parcelas">Quantidade de Parcelas</label>
             <select
               id="qtd_parcelas"
@@ -781,7 +830,7 @@ function App() {
           </div>
 
           <div>
-            <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Gateway</label>
+            <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Gateway para Parcelas</label>
             <select
               id="forma_pagamento"
               name="forma_pagamento"
@@ -793,6 +842,7 @@ function App() {
               <option value="PIX">PIX</option>
               <option value="GURU">GURU</option>
               <option value="ASAAS">ASAAS</option>
+              <option value="Boleto">Boleto</option>
             </select>
           </div>
 
@@ -820,6 +870,24 @@ function App() {
               className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
               required
             />
+          </div>
+
+          <div>
+            <label className="block text-green-400 mb-2" htmlFor="dia_vencimento">Dia de Vencimento</label>
+            <select
+              id="dia_vencimento"
+              name="dia_vencimento"
+              value={formData.dia_vencimento}
+              onChange={handleChange}
+              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+              required
+            >
+              {Array.from({ length: 28 }, (_, i) => i + 1).map(dia => (
+                <option key={dia} value={dia}>
+                  {dia}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </>
@@ -902,13 +970,16 @@ function App() {
       cidade: '',
       estado: '',
       valor_pagar: '',
+      valor_entrada: '0',
+      forma_pagamento_entrada: 'PIX',
       data: dataAtual,
       qtd_parcelas: '1',
       valor_parcela: '',
       forma_pagamento: 'PIX',
       produto: 'CCANN',
       vendedor: 'MILENA',
-      forma_cobranca: 'À VISTA'
+      forma_cobranca: 'À VISTA',
+      dia_vencimento: '20'
     });
     setCep('');
     setEtapaAtual(1);
