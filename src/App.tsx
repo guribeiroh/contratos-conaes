@@ -58,13 +58,13 @@ function App() {
     estado: '',
     valor_pagar: '',
     valor_entrada: '0',
-    forma_pagamento_entrada: 'PIX',
+    forma_pagamento_entrada: 'Pix',
     data: dataAtual,
     qtd_parcelas: '1',
     valor_parcela: '',
-    forma_pagamento: 'PIX',
-    produto: 'CCANN',
-    vendedor: 'MILENA',
+    forma_pagamento: 'Pix',
+    produto: 'Ccann',
+    vendedor: 'Milena',
     forma_cobranca: 'Parcelamento',
     dia_vencimento: '20'
   });
@@ -366,7 +366,7 @@ function App() {
       // Descrição completa do pagamento
       let valorReal = '';
       
-      if (formData.forma_cobranca === 'À VISTA') {
+      if (formData.forma_cobranca === 'À Vista') {
         valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) através de ${formData.forma_pagamento}.`;
       } else if (formData.forma_cobranca === 'Entrada + Parcelamento') {
         let descricaoPagamento = '';
@@ -477,7 +477,7 @@ function App() {
                               !!formData.vendedor;
       
       // Validações específicas por forma de cobrança
-      if (formData.forma_cobranca === 'À VISTA') {
+      if (formData.forma_cobranca === 'À Vista') {
         return validacaoBasica && !!formData.forma_pagamento;
       } else if (formData.forma_cobranca === 'Entrada + Parcelamento') {
         const validacaoParcelamento = validacaoBasica && 
@@ -784,9 +784,9 @@ function App() {
               className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
               required
             >
-              <option value="MILENA">MILENA</option>
-              <option value="ALANA">ALANA</option>
-              <option value="CONAES">CONAES</option>
+              <option value="Milena">Milena</option>
+              <option value="Alana">Alana</option>
+              <option value="Conaes">Conaes</option>
             </select>
           </div>
           
@@ -800,10 +800,10 @@ function App() {
               className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
               required
             >
-              <option value="Pós - CCANN">Pós - CCANN</option>
-              <option value="CCANN">CCANN</option>
-              <option value="PED NA PRÁTICA">PED NA PRÁTICA</option>
-              <option value="CONGRESSO">CONGRESSO</option>
+              <option value="Pós - Ccann">Pós - Ccann</option>
+              <option value="Ccann">Ccann</option>
+              <option value="Ped na Prática">Ped na Prática</option>
+              <option value="Congresso">Congresso</option>
             </select>
           </div>
 
@@ -817,7 +817,7 @@ function App() {
               className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
               required
             >
-              <option value="À VISTA">À VISTA</option>
+              <option value="À Vista">À Vista</option>
               <option value="Entrada + Parcelamento">Entrada + Parcelamento</option>
               <option value="Parcelamento">Parcelamento</option>
               <option value="Recorrência">Recorrência</option>
@@ -865,7 +865,7 @@ function App() {
                   className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
                   required
                 >
-                  <option value="PIX">PIX</option>
+                  <option value="Pix">Pix</option>
                   <option value="Cartão de crédito">Cartão de crédito</option>
                   <option value="Boleto">Boleto</option>
                 </select>
@@ -903,7 +903,7 @@ function App() {
                   className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
                   required
                 >
-                  <option value="PIX">PIX</option>
+                  <option value="Pix">Pix</option>
                   <option value="Cartão de crédito">Cartão de crédito</option>
                   <option value="Boleto">Boleto</option>
                 </select>
@@ -944,7 +944,7 @@ function App() {
             </>
           )}
 
-          {formData.forma_cobranca === 'À VISTA' && (
+          {formData.forma_cobranca === 'À Vista' && (
             <div>
               <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Forma de Pagamento</label>
               <select
@@ -955,7 +955,7 @@ function App() {
                 className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
                 required
               >
-                <option value="PIX">PIX</option>
+                <option value="Pix">Pix</option>
                 <option value="Cartão de crédito">Cartão de crédito</option>
                 <option value="Boleto">Boleto</option>
               </select>
@@ -1056,13 +1056,13 @@ function App() {
       estado: '',
       valor_pagar: '',
       valor_entrada: '0',
-      forma_pagamento_entrada: 'PIX',
+      forma_pagamento_entrada: 'Pix',
       data: dataAtual,
       qtd_parcelas: '1',
       valor_parcela: '',
-      forma_pagamento: 'PIX',
-      produto: 'CCANN',
-      vendedor: 'MILENA',
+      forma_pagamento: 'Pix',
+      produto: 'Ccann',
+      vendedor: 'Milena',
       forma_cobranca: 'Parcelamento',
       dia_vencimento: '20'
     });
