@@ -360,9 +360,21 @@ function App() {
       // Descrição completa do pagamento
       let valorReal = '';
       if (valorEntradaNumerico > 0) {
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e demais parcelas em ${formData.qtd_parcelas} x ${valorParcelaSimples} através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês.`;
+        let descricaoPagamento = '';
+        if (formData.forma_pagamento === 'Boleto') {
+          descricaoPagamento = `através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês`;
+        } else {
+          descricaoPagamento = `através de ${formData.forma_pagamento}`;
+        }
+        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e demais parcelas em ${formData.qtd_parcelas} x ${valorParcelaSimples} ${descricaoPagamento}.`;
       } else {
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de ${valorParcelaSimples} através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês.`;
+        let descricaoPagamento = '';
+        if (formData.forma_pagamento === 'Boleto') {
+          descricaoPagamento = `através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês`;
+        } else {
+          descricaoPagamento = `através de ${formData.forma_pagamento}`;
+        }
+        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de ${valorParcelaSimples} ${descricaoPagamento}.`;
       }
 
       const payload = {
@@ -449,9 +461,16 @@ function App() {
              !!formData.cidade && !!formData.estado;
     } else if (etapaAtual === 3) {
       // Validar informações financeiras (valor de entrada não é obrigatório)
-      return !!formData.valor_pagar && !!formData.qtd_parcelas && 
-             !!formData.data && !!formData.forma_pagamento && !!formData.produto && 
-             !!formData.vendedor && !!formData.forma_cobranca && !!formData.dia_vencimento;
+      const validacaoBasica = !!formData.valor_pagar && !!formData.qtd_parcelas && 
+                         !!formData.data && !!formData.forma_pagamento && !!formData.produto && 
+                         !!formData.vendedor && !!formData.forma_cobranca;
+                         
+      // Se a forma de pagamento for Boleto, o dia de vencimento é obrigatório
+      if (formData.forma_pagamento === 'Boleto') {
+        return validacaoBasica && !!formData.dia_vencimento;
+      }
+      
+      return validacaoBasica;
     }
     return true;
   };
@@ -806,8 +825,8 @@ function App() {
               className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
             >
               <option value="PIX">PIX</option>
-              <option value="Transferência">Transferência</option>
-              <option value="Cartão">Cartão</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
+              <option value="Boleto">Boleto</option>
             </select>
           </div>
 
@@ -830,7 +849,7 @@ function App() {
           </div>
 
           <div>
-            <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Gateway para Parcelas</label>
+            <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Forma de Pagamento</label>
             <select
               id="forma_pagamento"
               name="forma_pagamento"
@@ -840,8 +859,7 @@ function App() {
               required
             >
               <option value="PIX">PIX</option>
-              <option value="GURU">GURU</option>
-              <option value="ASAAS">ASAAS</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
               <option value="Boleto">Boleto</option>
             </select>
           </div>
@@ -872,23 +890,25 @@ function App() {
             />
           </div>
 
-          <div>
-            <label className="block text-green-400 mb-2" htmlFor="dia_vencimento">Dia de Vencimento</label>
-            <select
-              id="dia_vencimento"
-              name="dia_vencimento"
-              value={formData.dia_vencimento}
-              onChange={handleChange}
-              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-              required
-            >
-              {Array.from({ length: 28 }, (_, i) => i + 1).map(dia => (
-                <option key={dia} value={dia}>
-                  {dia}
-                </option>
-              ))}
-            </select>
-          </div>
+          {formData.forma_pagamento === 'Boleto' && (
+            <div>
+              <label className="block text-green-400 mb-2" htmlFor="dia_vencimento">Dia de Vencimento</label>
+              <select
+                id="dia_vencimento"
+                name="dia_vencimento"
+                value={formData.dia_vencimento}
+                onChange={handleChange}
+                className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                required
+              >
+                {Array.from({ length: 28 }, (_, i) => i + 1).map(dia => (
+                  <option key={dia} value={dia}>
+                    {dia}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
         </div>
       </>
     );
