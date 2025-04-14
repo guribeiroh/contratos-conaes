@@ -776,7 +776,15 @@ function App() {
         
         {/* Informações Básicas */}
         <div className="mb-6">
-          <h3 className="text-md font-medium text-green-400 mb-4 border-b border-gray-700 pb-2">Informações Gerais</h3>
+          <div className="flex items-center mb-4">
+            <span className="inline-flex items-center px-4 py-2 bg-green-600 bg-opacity-25 rounded-lg border border-green-500 text-green-400 font-medium text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Informações Gerais
+            </span>
+            <div className="ml-3 flex-grow h-px bg-gray-700"></div>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-green-400 mb-2" htmlFor="vendedor">Vendedor</label>
@@ -842,7 +850,15 @@ function App() {
 
         {/* Forma de Pagamento */}
         <div className="mb-6">
-          <h3 className="text-md font-medium text-green-400 mb-4 border-b border-gray-700 pb-2">Forma de Pagamento</h3>
+          <div className="flex items-center mb-4">
+            <span className="inline-flex items-center px-4 py-2 bg-green-600 bg-opacity-25 rounded-lg border border-green-500 text-green-400 font-medium text-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+              </svg>
+              Forma de Pagamento
+            </span>
+            <div className="ml-3 flex-grow h-px bg-gray-700"></div>
+          </div>
           
           <div className="mb-6">
             <label className="block text-green-400 mb-2" htmlFor="forma_cobranca">Tipo de Pagamento</label>
@@ -936,8 +952,15 @@ function App() {
                 </div>
               </div>
 
-              <hr className="border-gray-700 my-2" />
-              <p className="text-sm text-gray-400 mb-2">Configuração das Parcelas</p>
+              <div className="flex items-center my-3">
+                <span className="inline-flex items-center px-3 py-1 bg-gray-700 rounded-lg text-gray-300 text-xs font-medium">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                  Configuração das Parcelas
+                </span>
+                <div className="ml-3 flex-grow h-px bg-gray-700"></div>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
