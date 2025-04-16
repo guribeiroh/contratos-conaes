@@ -435,26 +435,40 @@ function App() {
       // Descrição completa do pagamento
       let valorReal = '';
       
-      if (formData.forma_cobranca === 'À Vista') {
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) através de ${formData.forma_pagamento}.`;
-      } else if (formData.forma_cobranca === 'Entrada + Parcelamento') {
+      if (formData.tem_entrada) {
+        // Se tem entrada, formato será diferente independente da forma de cobrança
         let descricaoPagamento = '';
-        if (formData.forma_pagamento === 'Boleto') {
-          descricaoPagamento = `através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês`;
+        if (formData.forma_cobranca === 'À Vista') {
+          valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante via ${formData.forma_pagamento}.`;
         } else {
-          descricaoPagamento = `através de ${formData.forma_pagamento}`;
+          // Para opções parceladas (Recorrência ou C. Crédito)
+          if (formData.forma_cobranca === 'Recorrência' && formData.forma_pagamento === 'Boleto') {
+            descricaoPagamento = `através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês`;
+          } else if (formData.forma_cobranca === 'Recorrência') {
+            descricaoPagamento = `através de ${formData.forma_pagamento}`;
+          } else if (formData.forma_cobranca === 'C. Crédito') {
+            descricaoPagamento = `através de cartão de crédito`;
+          }
+          
+          valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e demais parcelas em ${formData.qtd_parcelas} x R$ ${valorParcelaSimples} ${descricaoPagamento}.`;
         }
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e demais parcelas em ${formData.qtd_parcelas} x R$ ${valorParcelaSimples} ${descricaoPagamento}.`;
-      } else if (formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') {
-        let descricaoPagamento = '';
-        if (formData.forma_pagamento === 'Boleto') {
-          descricaoPagamento = `através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês`;
-        } else {
-          descricaoPagamento = `através de ${formData.forma_pagamento}`;
-        }
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de R$ ${valorParcelaSimples} ${descricaoPagamento}.`;
       } else {
-        valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}).`;
+        // Sem entrada
+        if (formData.forma_cobranca === 'À Vista') {
+          valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) através de ${formData.forma_pagamento}.`;
+        } else {
+          // Para opções parceladas (Recorrência ou C. Crédito)
+          let descricaoPagamento = '';
+          if (formData.forma_cobranca === 'Recorrência' && formData.forma_pagamento === 'Boleto') {
+            descricaoPagamento = `através de ${formData.forma_pagamento} com o vencimento determinado em todo dia ${formData.dia_vencimento} de cada mês`;
+          } else if (formData.forma_cobranca === 'Recorrência') {
+            descricaoPagamento = `através de ${formData.forma_pagamento}`;
+          } else if (formData.forma_cobranca === 'C. Crédito') {
+            descricaoPagamento = `através de cartão de crédito`;
+          }
+          
+          valorReal = `o valor total de R$ ${valorFormatado} (${valorPorExtenso}) em ${formData.qtd_parcelas} x de R$ ${valorParcelaSimples} ${descricaoPagamento}.`;
+        }
       }
 
       // Criação da descrição padronizada para contratos
@@ -463,26 +477,40 @@ function App() {
       // Formatar o valor em extenso com primeira letra maiúscula
       const valorPorExtensoCapitalizado = valorPorExtenso.charAt(0).toUpperCase() + valorPorExtenso.slice(1);
       
-      if (formData.forma_cobranca === 'À Vista') {
-        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) pago à vista via ${formData.forma_pagamento}.`;
-      } else if (formData.forma_cobranca === 'Entrada + Parcelamento') {
+      if (formData.tem_entrada) {
+        // Se tem entrada, formato será diferente independente da forma de cobrança
         let descricaoParcelas = '';
-        if (formData.forma_pagamento === 'Boleto') {
-          descricaoParcelas = `via ${formData.forma_pagamento} com vencimento no dia ${formData.dia_vencimento} de cada mês`;
+        if (formData.forma_cobranca === 'À Vista') {
+          descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante via ${formData.forma_pagamento}.`;
         } else {
-          descricaoParcelas = `via ${formData.forma_pagamento}`;
+          // Para opções parceladas (Recorrência ou C. Crédito)
+          if (formData.forma_cobranca === 'Recorrência' && formData.forma_pagamento === 'Boleto') {
+            descricaoParcelas = `via ${formData.forma_pagamento} com vencimento no dia ${formData.dia_vencimento} de cada mês`;
+          } else if (formData.forma_cobranca === 'Recorrência') {
+            descricaoParcelas = `via ${formData.forma_pagamento}`;
+          } else if (formData.forma_cobranca === 'C. Crédito') {
+            descricaoParcelas = `via cartão de crédito`;
+          }
+          
+          descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
         }
-        
-        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
-      } else if (formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') {
-        let descricaoParcelas = '';
-        if (formData.forma_pagamento === 'Boleto') {
-          descricaoParcelas = `via ${formData.forma_pagamento} com vencimento no dia ${formData.dia_vencimento} de cada mês`;
+      } else {
+        // Sem entrada
+        if (formData.forma_cobranca === 'À Vista') {
+          descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) pago à vista via ${formData.forma_pagamento}.`;
         } else {
-          descricaoParcelas = `via ${formData.forma_pagamento}`;
+          // Para opções parceladas (Recorrência ou C. Crédito)
+          let descricaoParcelas = '';
+          if (formData.forma_cobranca === 'Recorrência' && formData.forma_pagamento === 'Boleto') {
+            descricaoParcelas = `via ${formData.forma_pagamento} com vencimento no dia ${formData.dia_vencimento} de cada mês`;
+          } else if (formData.forma_cobranca === 'Recorrência') {
+            descricaoParcelas = `via ${formData.forma_pagamento}`;
+          } else if (formData.forma_cobranca === 'C. Crédito') {
+            descricaoParcelas = `via cartão de crédito`;
+          }
+          
+          descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
         }
-        
-        descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
       }
 
       const payload = {
