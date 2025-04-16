@@ -490,8 +490,10 @@ function App() {
     }
   };
 
-  // Validação da etapa atual antes de avançar
+  // Função para validar se todos os campos obrigatórios da etapa atual estão preenchidos
   const validarEtapaAtual = () => {
+    // Função comentada para permitir navegação sem validação
+    /*
     if (etapaAtual === 1) {
       // Validar informações pessoais
       return !!formData.NOME && !!formData.email && !!formData.telefone && !!formData.data_nascimento && 
@@ -537,6 +539,9 @@ function App() {
       
       return validacaoBasica;
     }
+    */
+    
+    // Sempre retorna true para permitir navegação entre etapas
     return true;
   };
 
@@ -678,8 +683,7 @@ function App() {
 
           <div>
             <label className="block text-green-400 mb-2" htmlFor="RG">RG</label>
-            <InputMask
-              mask="99.999.999-9"
+            <input
               type="text"
               id="RG"
               name="RG"
@@ -1143,42 +1147,28 @@ function App() {
   // Renderiza os botões de navegação de acordo com a etapa atual
   const renderBotoesNavegacao = () => {
     return (
-      <div className="flex justify-between mt-8">
+      <div className="mt-8 flex justify-between items-center">
         {etapaAtual > 1 && (
           <button
             type="button"
-            onClick={voltarEtapa}
-            className="flex items-center justify-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors"
+            onClick={() => setEtapaAtual(etapaAtual - 1)}
+            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
           >
-            <ArrowLeft className="w-5 h-5" />
-            Anterior
+            Voltar
           </button>
         )}
         
-        {etapaAtual < totalEtapas ? (
+        <div className="text-sm text-yellow-500 italic font-medium">
+          Navegação entre etapas permitida sem validação dos campos.
+        </div>
+        
+        {etapaAtual < 4 && (
           <button
             type="button"
-            onClick={avancarEtapa}
-            disabled={!validarEtapaAtual()}
-            className={`ml-auto flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors ${!validarEtapaAtual() ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => setEtapaAtual(etapaAtual + 1)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
           >
             Próximo
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        ) : (
-          <button
-            type="submit"
-            disabled={loading || !!dateError}
-            className={`ml-auto flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors ${(loading || !!dateError) ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {loading ? (
-              'Enviando...'
-            ) : (
-              <>
-                <Send className="w-5 h-5" />
-                Enviar Dados
-              </>
-            )}
           </button>
         )}
       </div>
@@ -1231,6 +1221,21 @@ function App() {
     setEtapaAtual(1);
   };
 
+  const renderBotaoConcluir = () => {
+    if (etapaAtual === 4) {
+      return (
+        <button
+          type="submit"
+          onClick={handleSubmit}
+          className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+        >
+          Concluir e Gerar Contrato
+        </button>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-2xl p-8">
@@ -1241,6 +1246,7 @@ function App() {
         <form onSubmit={handleSubmit} className="space-y-6">
           {renderEtapaAtual()}
           {renderBotoesNavegacao()}
+          {renderBotaoConcluir()}
         </form>
 
         {/* Modal de sucesso */}
