@@ -208,8 +208,8 @@ function App() {
       const valorTotal = parseInt(formData.valor_pagar) / 100;
       let valorAParcelar = valorTotal;
       
-      // Se for entrada + parcelamento, subtrair o valor da entrada
-      if (formData.forma_cobranca === 'Entrada + Parcelamento' && formData.valor_entrada) {
+      // Subtrair o valor da entrada se o campo tem_entrada estiver ativado
+      if (formData.tem_entrada && formData.valor_entrada) {
         const valorEntrada = parseInt(formData.valor_entrada) / 100;
         valorAParcelar = valorTotal - valorEntrada;
       }
@@ -224,7 +224,7 @@ function App() {
         }));
       }
     }
-  }, [formData.valor_pagar, formData.qtd_parcelas, formData.valor_entrada, formData.forma_cobranca]);
+  }, [formData.valor_pagar, formData.qtd_parcelas, formData.valor_entrada, formData.tem_entrada]);
 
   const checkAge = (birthDate: string) => {
     // Usar o fuso horário local (Brasília) para ambas as datas
