@@ -24,6 +24,7 @@ interface FormData {
   cidade: string;
   estado: string;
   valor_pagar: string;
+  tem_entrada: boolean;
   valor_entrada: string;
   forma_pagamento_entrada: string;
   data: string;
@@ -57,6 +58,7 @@ function App() {
     cidade: '',
     estado: '',
     valor_pagar: '',
+    tem_entrada: false,
     valor_entrada: '0',
     forma_pagamento_entrada: 'Pix',
     data: dataAtual,
@@ -323,31 +325,34 @@ function App() {
     }
 
     // Validações específicas por forma de cobrança
-    if (formData.forma_cobranca === 'Entrada + Parcelamento') {
-      if (!formData.qtd_parcelas || !formData.forma_pagamento || !formData.valor_entrada || !formData.forma_pagamento_entrada) {
-        alert('Por favor, preencha todos os dados de entrada e parcelamento.');
+    if (formData.tem_entrada) {
+      if (!formData.valor_entrada || !formData.forma_pagamento_entrada) {
+        alert('Por favor, preencha todos os dados da entrada.');
+        setEtapaAtual(3);
+        return;
+      }
+    }
+    
+    if (formData.forma_cobranca === 'Recorrência' || formData.forma_cobranca === 'C. Crédito') {
+      if (!formData.qtd_parcelas) {
+        alert('Por favor, selecione a quantidade de parcelas.');
         setEtapaAtual(3);
         return;
       }
       
-      // Verifica se precisa validar dia de vencimento para boleto
-      if (formData.forma_pagamento === 'Boleto' && !formData.dia_vencimento) {
-        alert('Por favor, informe o dia de vencimento do boleto.');
-        setEtapaAtual(3);
-        return;
-      }
-    } else if (formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') {
-      if (!formData.qtd_parcelas || !formData.forma_pagamento) {
-        alert('Por favor, preencha todos os dados de parcelamento.');
-        setEtapaAtual(3);
-        return;
-      }
-      
-      // Verifica se precisa validar dia de vencimento para boleto
-      if (formData.forma_pagamento === 'Boleto' && !formData.dia_vencimento) {
-        alert('Por favor, informe o dia de vencimento do boleto.');
-        setEtapaAtual(3);
-        return;
+      if (formData.forma_cobranca === 'Recorrência') {
+        if (!formData.forma_pagamento) {
+          alert('Por favor, selecione a forma de pagamento.');
+          setEtapaAtual(3);
+          return;
+        }
+        
+        // Verifica se precisa validar dia de vencimento para boleto
+        if (formData.forma_pagamento === 'Boleto' && !formData.dia_vencimento) {
+          alert('Por favor, informe o dia de vencimento do boleto.');
+          setEtapaAtual(3);
+          return;
+        }
       }
     } else if (formData.forma_cobranca === 'À Vista') {
       if (!formData.forma_pagamento) {
@@ -969,10 +974,38 @@ function App() {
               required
             >
               <option value="À Vista">À Vista</option>
-              <option value="Entrada + Parcelamento">Entrada + Parcelamento</option>
-              <option value="Parcelamento">Parcelamento</option>
               <option value="Recorrência">Recorrência</option>
+              <option value="C. Crédito">C. Crédito</option>
             </select>
+          </div>
+
+          {/* Switch para controlar se tem entrada */}
+          <div className="mb-6">
+            <div className="flex items-center">
+              <label className="block text-green-400 mr-3" htmlFor="tem_entrada">Pagamento com Entrada</label>
+              <div className="relative inline-block w-10 mr-2 align-middle select-none">
+                <input
+                  type="checkbox"
+                  id="tem_entrada"
+                  name="tem_entrada"
+                  checked={formData.tem_entrada}
+                  onChange={(e) => {
+                    setFormData(prev => ({
+                      ...prev,
+                      tem_entrada: e.target.checked
+                    }));
+                  }}
+                  className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+                />
+                <label
+                  htmlFor="tem_entrada"
+                  className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-700 cursor-pointer"
+                ></label>
+              </div>
+              <span className={`ml-2 text-sm ${formData.tem_entrada ? 'text-green-400' : 'text-gray-500'}`}>
+                {formData.tem_entrada ? 'Sim' : 'Não'}
+              </span>
+            </div>
           </div>
 
           {/* Opções condicionais com base na forma de cobrança selecionada */}
@@ -989,7 +1022,6 @@ function App() {
                   required
                 >
                   <option value="Pix">Pix</option>
-                  <option value="Cartão de crédito">Cartão de crédito</option>
                   <option value="Boleto">Boleto</option>
                 </select>
               </div>
@@ -1016,8 +1048,10 @@ function App() {
             </div>
           )}
 
-          {formData.forma_cobranca === 'Entrada + Parcelamento' && (
-            <div className="grid grid-cols-1 gap-6 bg-gray-750 p-4 rounded-lg border border-gray-700">
+          {/* Campos para Entrada (se tem_entrada for true) */}
+          {formData.tem_entrada && (
+            <div className="grid grid-cols-1 gap-6 bg-gray-750 p-4 rounded-lg border border-gray-700 mt-4 mb-4">
+              <h3 className="text-lg font-semibold text-green-400">Informações da Entrada</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-green-400 mb-2" htmlFor="valor_entrada">Valor de Entrada</label>
@@ -1044,94 +1078,14 @@ function App() {
                     required
                   >
                     <option value="Pix">Pix</option>
-                    <option value="Cartão de crédito">Cartão de crédito</option>
                     <option value="Boleto">Boleto</option>
                   </select>
                 </div>
-              </div>
-
-              <div className="flex items-center my-3">
-                <span className="inline-flex items-center px-3 py-1 bg-gray-700 rounded-lg text-gray-300 text-xs font-medium">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                  Configuração das Parcelas
-                </span>
-                <div className="ml-3 flex-grow h-px bg-gray-700"></div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-green-400 mb-2" htmlFor="qtd_parcelas">Quantidade de Parcelas</label>
-                  <select
-                    id="qtd_parcelas"
-                    name="qtd_parcelas"
-                    value={formData.qtd_parcelas}
-                    onChange={handleChange}
-                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                    required
-                  >
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map(num => (
-                      <option key={num} value={num}>
-                        {num} {num === 1 ? 'parcela' : 'parcelas'}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Meio de Pagamento das Parcelas</label>
-                  <select
-                    id="forma_pagamento"
-                    name="forma_pagamento"
-                    value={formData.forma_pagamento}
-                    onChange={handleChange}
-                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                    required
-                  >
-                    <option value="Pix">Pix</option>
-                    <option value="Cartão de crédito">Cartão de crédito</option>
-                    <option value="Boleto">Boleto</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-green-400 mb-2" htmlFor="valor_parcela">Valor da Parcela</label>
-                  <input
-                    type="text"
-                    id="valor_parcela"
-                    name="valor_parcela"
-                    value={formData.valor_parcela ? formatCurrency(formData.valor_parcela) : ''}
-                    readOnly
-                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                    placeholder="R$ 0,00"
-                  />
-                </div>
-                
-                {formData.forma_pagamento === 'Boleto' && (
-                  <div>
-                    <label className="block text-green-400 mb-2" htmlFor="dia_vencimento">Dia de Vencimento</label>
-                    <select
-                      id="dia_vencimento"
-                      name="dia_vencimento"
-                      value={formData.dia_vencimento}
-                      onChange={handleChange}
-                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                      required
-                    >
-                      {Array.from({ length: 28 }, (_, i) => i + 1).map(dia => (
-                        <option key={dia} value={dia}>
-                          {dia}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                )}
               </div>
             </div>
           )}
 
-          {(formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') && (
+          {(formData.forma_cobranca === 'Recorrência' || formData.forma_cobranca === 'C. Crédito') && (
             <div className="grid grid-cols-1 gap-6 bg-gray-750 p-4 rounded-lg border border-gray-700">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -1152,21 +1106,22 @@ function App() {
                   </select>
                 </div>
 
-                <div>
-                  <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Meio de Pagamento</label>
-                  <select
-                    id="forma_pagamento"
-                    name="forma_pagamento"
-                    value={formData.forma_pagamento}
-                    onChange={handleChange}
-                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
-                    required
-                  >
-                    <option value="Pix">Pix</option>
-                    <option value="Cartão de crédito">Cartão de crédito</option>
-                    <option value="Boleto">Boleto</option>
-                  </select>
-                </div>
+                {formData.forma_cobranca === 'Recorrência' && (
+                  <div>
+                    <label className="block text-green-400 mb-2" htmlFor="forma_pagamento">Meio de Pagamento</label>
+                    <select
+                      id="forma_pagamento"
+                      name="forma_pagamento"
+                      value={formData.forma_pagamento}
+                      onChange={handleChange}
+                      className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+                      required
+                    >
+                      <option value="Pix">Pix</option>
+                      <option value="Boleto">Boleto</option>
+                    </select>
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-green-400 mb-2" htmlFor="valor_parcela">Valor da Parcela</label>
@@ -1268,6 +1223,7 @@ function App() {
       cidade: '',
       estado: '',
       valor_pagar: '',
+      tem_entrada: false,
       valor_entrada: '0',
       forma_pagamento_entrada: 'Pix',
       data: dataAtual,
@@ -1300,6 +1256,24 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+      <style jsx global>{`
+        .toggle-checkbox:checked {
+          right: 0;
+          border-color: #10B981;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+          background-color: #10B981;
+        }
+        .toggle-checkbox {
+          right: 0;
+          transition: all 0.3s;
+          border-color: #666;
+          left: 0;
+        }
+        .toggle-label {
+          transition: all 0.3s;
+        }
+      `}</style>
       <div className="w-full max-w-2xl bg-gray-800 rounded-xl shadow-2xl p-8">
         <h1 className="text-3xl font-bold text-green-400 mb-8 text-center">Criação de Contratos</h1>
         
