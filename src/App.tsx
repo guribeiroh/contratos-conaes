@@ -294,9 +294,73 @@ function App() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Validação de idade
     if (dateError) {
-      alert('Por favor, corrija os erros antes de enviar.');
+      alert('Por favor, corrija os erros de idade antes de enviar.');
       return;
+    }
+
+    // Validação completa de todos os campos antes de enviar
+    // Dados pessoais
+    if (!formData.NOME || !formData.email || !formData.telefone || !formData.data_nascimento || !formData.CPF || !formData.RG) {
+      alert('Por favor, preencha todos os dados pessoais.');
+      setEtapaAtual(1);
+      return;
+    }
+
+    // Dados de endereço
+    if (!formData.endereco || !formData.numero || !formData.bairro || !formData.cidade || !formData.estado) {
+      alert('Por favor, preencha todos os dados de endereço.');
+      setEtapaAtual(2);
+      return;
+    }
+
+    // Dados financeiros - validação básica para todas as formas de cobrança
+    if (!formData.valor_pagar || !formData.data || !formData.forma_cobranca || !formData.produto || !formData.vendedor) {
+      alert('Por favor, preencha todas as informações financeiras básicas.');
+      setEtapaAtual(3);
+      return;
+    }
+
+    // Validações específicas por forma de cobrança
+    if (formData.forma_cobranca === 'Entrada + Parcelamento') {
+      if (!formData.qtd_parcelas || !formData.forma_pagamento || !formData.valor_entrada || !formData.forma_pagamento_entrada) {
+        alert('Por favor, preencha todos os dados de entrada e parcelamento.');
+        setEtapaAtual(3);
+        return;
+      }
+      
+      // Verifica se precisa validar dia de vencimento para boleto
+      if (formData.forma_pagamento === 'Boleto' && !formData.dia_vencimento) {
+        alert('Por favor, informe o dia de vencimento do boleto.');
+        setEtapaAtual(3);
+        return;
+      }
+    } else if (formData.forma_cobranca === 'Parcelamento' || formData.forma_cobranca === 'Recorrência') {
+      if (!formData.qtd_parcelas || !formData.forma_pagamento) {
+        alert('Por favor, preencha todos os dados de parcelamento.');
+        setEtapaAtual(3);
+        return;
+      }
+      
+      // Verifica se precisa validar dia de vencimento para boleto
+      if (formData.forma_pagamento === 'Boleto' && !formData.dia_vencimento) {
+        alert('Por favor, informe o dia de vencimento do boleto.');
+        setEtapaAtual(3);
+        return;
+      }
+    } else if (formData.forma_cobranca === 'À Vista') {
+      if (!formData.forma_pagamento) {
+        alert('Por favor, selecione a forma de pagamento.');
+        setEtapaAtual(3);
+        return;
+      }
+      
+      if (formData.forma_pagamento === 'Boleto' && !formData.dia_vencimento) {
+        alert('Por favor, informe o dia de vencimento do boleto.');
+        setEtapaAtual(3);
+        return;
+      }
     }
 
     setLoading(true);
@@ -1160,7 +1224,7 @@ function App() {
         
         <div className="flex-grow"></div>
         
-        {etapaAtual < 4 && (
+        {etapaAtual < 3 && (
           <button
             type="button"
             onClick={() => setEtapaAtual(etapaAtual + 1)}
@@ -1220,7 +1284,7 @@ function App() {
   };
 
   const renderBotaoConcluir = () => {
-    if (etapaAtual === 4) {
+    if (etapaAtual === 3) {
       return (
         <button
           type="submit"
