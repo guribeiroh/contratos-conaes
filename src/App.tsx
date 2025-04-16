@@ -61,11 +61,11 @@ function App() {
     valor_pagar: '',
     tem_entrada: false,
     valor_entrada: '0',
-    forma_pagamento_entrada: 'Pix',
+    forma_pagamento_entrada: 'PIX',
     data: dataAtual,
     qtd_parcelas: '1',
     valor_parcela: '',
-    forma_pagamento: 'Pix',
+    forma_pagamento: 'PIX',
     produto: 'Ccann',
     vendedor: 'Milena',
     forma_cobranca: 'Parcelamento',
@@ -1067,9 +1067,8 @@ function App() {
                   className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
                   required
                 >
-                  <option value="Pix">Pix</option>
-                  <option value="Boleto">Boleto</option>
-                  <option value="Gateway">Gateway</option>
+                  <option value="PIX">PIX</option>
+                  <option value="BOLETO">BOLETO</option>
                 </select>
               </div>
 
@@ -1124,9 +1123,8 @@ function App() {
                     className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
                     required
                   >
-                    <option value="Pix">Pix</option>
-                    <option value="Boleto">Boleto</option>
-                    <option value="Gateway">Gateway</option>
+                    <option value="PIX">PIX</option>
+                    <option value="BOLETO">BOLETO</option>
                   </select>
                 </div>
               </div>
@@ -1165,9 +1163,8 @@ function App() {
                       className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
                       required
                     >
-                      <option value="Pix">Pix</option>
-                      <option value="Boleto">Boleto</option>
-                      <option value="Gateway">Gateway</option>
+                      <option value="PIX">PIX</option>
+                      <option value="BOLETO">BOLETO</option>
                     </select>
                   </div>
                 )}
@@ -1274,11 +1271,11 @@ function App() {
       valor_pagar: '',
       tem_entrada: false,
       valor_entrada: '0',
-      forma_pagamento_entrada: 'Pix',
+      forma_pagamento_entrada: 'PIX',
       data: dataAtual,
       qtd_parcelas: '1',
       valor_parcela: '',
-      forma_pagamento: 'Pix',
+      forma_pagamento: 'PIX',
       produto: 'Ccann',
       vendedor: 'Milena',
       forma_cobranca: 'Parcelamento',
