@@ -35,6 +35,7 @@ interface FormData {
   vendedor: string;
   forma_cobranca: string;
   dia_vencimento: string;
+  gateway: string;
 }
 
 function App() {
@@ -68,7 +69,8 @@ function App() {
     produto: 'Ccann',
     vendedor: 'Milena',
     forma_cobranca: 'Parcelamento',
-    dia_vencimento: '20'
+    dia_vencimento: '20',
+    gateway: 'PIX'
   });
 
   const [loading, setLoading] = useState(false);
@@ -1007,6 +1009,22 @@ function App() {
             </select>
           </div>
 
+          <div className="mb-6">
+            <label className="block text-green-400 mb-2" htmlFor="gateway">Gateway de Pagamento</label>
+            <select
+              id="gateway"
+              name="gateway"
+              value={formData.gateway}
+              onChange={handleChange}
+              className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg px-4 py-2 focus:outline-none focus:border-green-500"
+              required
+            >
+              <option value="PIX">PIX</option>
+              <option value="ASAAS">ASAAS</option>
+              <option value="GURU">GURU</option>
+            </select>
+          </div>
+
           {/* Switch para controlar se tem entrada */}
           <div className="mb-6">
             <div className="flex items-center">
@@ -1264,7 +1282,8 @@ function App() {
       produto: 'Ccann',
       vendedor: 'Milena',
       forma_cobranca: 'Parcelamento',
-      dia_vencimento: '20'
+      dia_vencimento: '20',
+      gateway: 'PIX'
     });
     setCep('');
     setEtapaAtual(1);
