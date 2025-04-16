@@ -1051,6 +1051,7 @@ function App() {
                 >
                   <option value="Pix">Pix</option>
                   <option value="Boleto">Boleto</option>
+                  <option value="Gateway">Gateway</option>
                 </select>
               </div>
 
@@ -1107,6 +1108,7 @@ function App() {
                   >
                     <option value="Pix">Pix</option>
                     <option value="Boleto">Boleto</option>
+                    <option value="Gateway">Gateway</option>
                   </select>
                 </div>
               </div>
@@ -1147,6 +1149,7 @@ function App() {
                     >
                       <option value="Pix">Pix</option>
                       <option value="Boleto">Boleto</option>
+                      <option value="Gateway">Gateway</option>
                     </select>
                   </div>
                 )}
