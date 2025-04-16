@@ -409,6 +409,13 @@ function App() {
         maximumFractionDigits: 2
       }).format(valorNumerico);
       
+      // Formato adicional: valor numérico sem o símbolo da moeda (ex: 7.800,12)
+      const valorNumericoSemSimbolo = new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+        useGrouping: true
+      }).format(valorNumerico);
+      
       // Valor formatado como "R$ X.XXX,XX (valor por extenso)"
       const valorCompleto = `R$ ${valorFormatado} (${valorPorExtenso})`;
       
@@ -521,6 +528,7 @@ function App() {
         data_nascimento: dataNascimentoFormatada,
         endereco: enderecoCompleto,
         valor_formatado: valorCompleto,
+        valor_numerico: valorNumericoSemSimbolo,
         valor_real: valorReal,
         valor_parcela_formatado: valorParcelaFormatado,
         valor_entrada_formatado: `R$ ${valorEntradaFormatado}`,
