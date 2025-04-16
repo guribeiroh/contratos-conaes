@@ -532,7 +532,7 @@ function App() {
         valor_real: valorReal,
         valor_parcela_formatado: valorParcelaFormatado,
         valor_entrada_formatado: `R$ ${valorEntradaFormatado}`,
-        parcelas: formData.qtd_parcelas,
+        parcelas: parseInt(formData.qtd_parcelas),
         dia,
         mes,
         mes_extenso: mesPorExtenso,
