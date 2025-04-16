@@ -1158,9 +1158,7 @@ function App() {
           </button>
         )}
         
-        <div className="text-sm text-yellow-500 italic font-medium">
-          Navegação entre etapas permitida sem validação dos campos.
-        </div>
+        <div className="flex-grow"></div>
         
         {etapaAtual < 4 && (
           <button
