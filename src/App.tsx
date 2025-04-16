@@ -28,7 +28,7 @@ interface FormData {
   valor_entrada: string;
   forma_pagamento_entrada: string;
   data: string;
-  qtd_parcelas: string;
+  qtd_parcelas: number;
   valor_parcela: string;
   forma_pagamento: string;
   produto: string;
@@ -63,7 +63,7 @@ function App() {
     valor_entrada: '0',
     forma_pagamento_entrada: 'PIX',
     data: dataAtual,
-    qtd_parcelas: '1',
+    qtd_parcelas: 1,
     valor_parcela: '',
     forma_pagamento: 'PIX',
     produto: 'Ccann',
@@ -216,7 +216,7 @@ function App() {
         valorAParcelar = valorTotal - valorEntrada;
       }
       
-      const parcelas = parseInt(formData.qtd_parcelas);
+      const parcelas = formData.qtd_parcelas;
       
       if (parcelas > 0 && valorAParcelar > 0) {
         const valorParcela = Math.round((valorAParcelar / parcelas) * 100).toString();
@@ -532,7 +532,7 @@ function App() {
         valor_real: valorReal,
         valor_parcela_formatado: valorParcelaFormatado,
         valor_entrada_formatado: `R$ ${valorEntradaFormatado}`,
-        parcelas: parseInt(formData.qtd_parcelas),
+        parcelas: formData.qtd_parcelas,
         dia,
         mes,
         mes_extenso: mesPorExtenso,
@@ -574,6 +574,11 @@ function App() {
       setFormData(prev => ({
         ...prev,
         [name]: numericValue
+      }));
+    } else if (name === 'qtd_parcelas') {
+      setFormData(prev => ({
+        ...prev,
+        [name]: parseInt(value)
       }));
     } else {
       setFormData(prev => ({
@@ -1281,7 +1286,7 @@ function App() {
       valor_entrada: '0',
       forma_pagamento_entrada: 'PIX',
       data: dataAtual,
-      qtd_parcelas: '1',
+      qtd_parcelas: 1,
       valor_parcela: '',
       forma_pagamento: 'PIX',
       produto: 'Ccann',
