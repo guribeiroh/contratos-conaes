@@ -1018,7 +1018,7 @@ function App() {
             >
               <option value="À Vista">À Vista</option>
               <option value="Recorrência">Recorrência</option>
-              <option value="C. Crédito">C. Crédito</option>
+              <option value="C. Crédito">Cartão de Crédito</option>
             </select>
           </div>
 
@@ -1138,7 +1138,7 @@ function App() {
                   >
                     <option value="PIX">PIX</option>
                     <option value="BOLETO">BOLETO</option>
-                    <option value="C. Crédito">C. Crédito</option>
+                    <option value="C. Crédito">Cartão de Crédito</option>
                   </select>
                 </div>
               </div>
