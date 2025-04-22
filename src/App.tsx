@@ -1138,7 +1138,7 @@ function App() {
                   >
                     <option value="PIX">PIX</option>
                     <option value="BOLETO">BOLETO</option>
-                    <option value="C. Crédito">Cartão de Crédito</option>
+                    <option value="cartão de crédito">Cartão de Crédito</option>
                   </select>
                 </div>
               </div>
