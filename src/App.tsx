@@ -1082,6 +1082,7 @@ function App() {
                 >
                   <option value="PIX">PIX</option>
                   <option value="BOLETO">BOLETO</option>
+                  <option value="GURU">GURU</option>
                 </select>
               </div>
 
@@ -1138,6 +1139,7 @@ function App() {
                   >
                     <option value="PIX">PIX</option>
                     <option value="BOLETO">BOLETO</option>
+                    <option value="GURU">GURU</option>
                     <option value="Cartão de Crédito">Cartão de Crédito</option>
                   </select>
                 </div>
@@ -1179,6 +1181,7 @@ function App() {
                     >
                       <option value="PIX">PIX</option>
                       <option value="BOLETO">BOLETO</option>
+                      <option value="GURU">GURU</option>
                     </select>
                   </div>
                 )}
