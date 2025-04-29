@@ -501,7 +501,14 @@ function App() {
             descricaoParcelas = `via cartão de crédito`;
           }
           
-          descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
+          if (formData.forma_cobranca === 'Recorrência') {
+            // Novo formato para recorrência com entrada
+            const dataInicio = new Date(formData.data);
+            const mesInicio = dataInicio.toLocaleString('pt-BR', { month: 'long' });
+            descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas mensais de R$ ${valorParcelaSimples} com início em ${mesInicio} de ${ano} ${descricaoParcelas}.`;
+          } else {
+            descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) sendo pago da seguinte maneira: R$ ${valorEntradaFormatado} de entrada via ${formData.forma_pagamento_entrada} e o restante em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
+          }
         }
       } else {
         // Sem entrada
@@ -518,7 +525,14 @@ function App() {
             descricaoParcelas = `via cartão de crédito`;
           }
           
-          descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
+          if (formData.forma_cobranca === 'Recorrência') {
+            // Novo formato para recorrência sem entrada
+            const dataInicio = new Date(formData.data);
+            const mesInicio = dataInicio.toLocaleString('pt-BR', { month: 'long' });
+            descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas mensais de R$ ${valorParcelaSimples} com início em ${mesInicio} de ${ano} ${descricaoParcelas}.`;
+          } else {
+            descricaoContratoPagamento = `R$ ${valorFormatado} (${valorPorExtensoCapitalizado}) dividido em ${formData.qtd_parcelas} parcelas de R$ ${valorParcelaSimples} ${descricaoParcelas}.`;
+          }
         }
       }
 
